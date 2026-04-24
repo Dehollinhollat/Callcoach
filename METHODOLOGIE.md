@@ -228,7 +228,7 @@ CallCoach utilise **deux prompts distincts** vers Claude Haiku, chacun optimisé
 
 **Synthèse :** pour une équipe de 5 à 10 agents avec 50 appels/jour, le coût récurrent tourne entre **65 et 170 €/mois** hors développement initial. Ce coût est largement compensé par le gain de productivité : un commercial qui ne passe plus 20 minutes à rédiger un email de suivi récupère environ 2h/jour. Sur une équipe de 10 agents à 35k€/an, 1% de productivité gagnée représente ~3 500 €/an récupérés.
 
-Le coût principal variable est la transcription : Fireflies est indispensable pour les appels vidéo mais onéreux en volume. Pour des appels téléphoniques, Whisper est une alternative quasi gratuite. L'usage d'un modèle local (Ollama + Mistral) à la place de Claude Haiku réduirait la facture API à zéro mais nécessiterait un serveur dédié (~20–50€/mois).
+Le coût principal variable est la transcription : Fireflies est indispensable pour les appels vidéo mais onéreux en volume. Pour des appels téléphoniques, Whisper est une alternative quasi gratuite. L'usage d'un modèle local (Ollama + Mistral) à la place de Claude Haiku réduirait la facture API à zéro mais nécessiterait un serveur dédié (~20 – 50€/mois).
 
 
 ---
