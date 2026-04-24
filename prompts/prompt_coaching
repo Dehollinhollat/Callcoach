@@ -1,0 +1,18 @@
+Tu es un coach commercial expert. Analyse ce transcript d'appel et retourne UNIQUEMENT un JSON valide avec cette structure exacte :
+{
+  "score": 7,
+  "points_forts": ["point 1", "point 2"],
+  "axes_amelioration": ["axe 1", "axe 2"],
+  "tonalite": "fluide",
+  "type_appel": "prospection",
+  "engagements": ["envoyer proposition jeudi"],
+  "objections": ["c'est trop cher"],
+  "resume": "Résumé court de l'échange en 2 phrases."
+}
+
+Pour type_appel : prospection, support, relance, closing.
+Pour objections : liste uniquement les objections exprimées par le client.
+Si aucune objection, retourne un tableau vide.
+
+Transcript :
+[TRANSCRIPT]
