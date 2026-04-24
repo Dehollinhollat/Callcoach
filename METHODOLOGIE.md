@@ -221,9 +221,9 @@ CallCoach utilise **deux prompts distincts** vers Claude Haiku, chacun optimisé
 | Poste | Estimation | Remarques |
 |---|---|---|
 | Infrastructure | 0 – 20 €/mois | n8n self-hosted sur un VPS basique (ex. Hetzner 4€/mois) ou n8n Cloud Starter (~20€/mois) |
-| APIs & licences | 5 – 80 €/mois | Claude Haiku (~5–15€ pour 50 appels/jour) + Fireflies Business si appels vidéo (~40–80€) |
+| APIs & licences | 5 – 80 €/mois | Claude Haiku (~5 – 15€ pour 50 appels/jour) + Fireflies Business si appels vidéo (~40–80€) |
 | Transcription téléphonique | 10 – 30 €/mois | Whisper API OpenAI (~0.006$/min) ou Ringover avec enregistrement natif |
-| Développement initial | 3 000 – 6 000 € | 10–20 jours/homme profil junior à confirmé (setup, tests, documentation) |
+| Développement initial | 3 000 – 6 000 € | 10 – 20 jours/homme profil junior à confirmé (setup, tests, documentation) |
 | Maintenance & évolutions | 200 – 500 €/mois | Monitoring, ajustements prompts, nouvelles intégrations CRM |
 
 **Synthèse :** pour une équipe de 5 à 10 agents avec 50 appels/jour, le coût récurrent tourne entre **65 et 170 €/mois** hors développement initial. Ce coût est largement compensé par le gain de productivité : un commercial qui ne passe plus 20 minutes à rédiger un email de suivi récupère environ 2h/jour. Sur une équipe de 10 agents à 35k€/an, 1% de productivité gagnée représente ~3 500 €/an récupérés.
