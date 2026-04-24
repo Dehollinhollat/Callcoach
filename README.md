@@ -1,5 +1,13 @@
 # CallCoach
 
+![n8n](https://img.shields.io/badge/n8n-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude_API-D97757?style=for-the-badge&logo=anthropic&logoColor=white)
+![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
+![Google Sheets](https://img.shields.io/badge/Google_Sheets-34A853?style=for-the-badge&logo=google-sheets&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+
 > Agent IA post-call : analyse automatique des appels, email de suivi en brouillon Gmail, coaching Slack en temps réel et alertes manager.
 
 ---
@@ -74,13 +82,20 @@ Transcript (simulé ou Fireflies/Whisper)
 ```
 callcoach/
 ├── n8n/
-│   ├── workflow_callcoach.json       # Workflow principal
-│   └── workflow_reporting_hebdo.json # Workflow cron hebdomadaire
+│   ├── workflow_callcoach.json
+│   └── workflow_reporting_hebdo.json
 ├── prompts/
-│   ├── email_followup.md             # Prompt rédaction email
-│   └── coaching_analysis.md          # Prompt analyse coaching
+│   ├── email_followup.md
+│   └── coaching_analysis.md
+├── assets/
+│   ├── cas_faible.png
+│   ├── cas_moyen.png
+│   ├── cas_bon.png
+│   ├── alerte_manager.png
+│   ├── coaching_slack.png
+│   └── notion_base_connaissances.png
 ├── docs/
-│   └── METHODOLOGIE.md              # Documentation complète du projet
+│   └── METHODOLOGIE.md
 └── README.md
 ```
 
@@ -96,6 +111,17 @@ callcoach/
 - Workspace Slack avec un bot configuré (`chat:write`)
 - Google Sheets avec les onglets `objections` et `historique`
 - Intégration Notion avec accès à la database cible
+
+## Aperçu
+
+### Coaching Slack
+![Coaching Slack](assets/coaching_slack.png)
+
+### Alerte Manager
+![Alerte Manager](assets/alerte_manager.png)
+
+### Base de connaissances Notion
+![Notion](assets/notion_base_connaissances.png)
 
 ### Installation
 
