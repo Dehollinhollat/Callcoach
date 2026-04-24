@@ -173,4 +173,4 @@ Trois scénarios sont documentés pour valider le workflow de bout en bout :
 MBA Big Data & IA
 
 [LinkedIn](https://linkedin.com/in/dehollin-hollat) · [GitHub](https://github.com/Dehollinhollat)
-dehollin.hollat@outlook.fr 
+· [outlook]Dehollin.hollat@outlook.fr 
