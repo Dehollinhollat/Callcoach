@@ -22,13 +22,13 @@ Ce projet fait partie d'un portfolio Data & IA orienté automatisation et agents
 
 ## Fonctionnalités
 
-- **Email de suivi automatique** — brouillon Gmail généré par Claude après chaque appel, personnalisé selon l'historique client
-- **Coaching en temps réel** — score /10, points forts, axes d'amélioration, tonalité et engagements pris envoyés sur Slack
-- **Alerte manager** — notification immédiate sur channel dédié si score < 4
-- **Bibliothèque d'objections** — toutes les objections clients stockées dans Google Sheets
-- **Base de connaissances** — les meilleurs appels (score > 7) archivés automatiquement dans Notion
-- **Mémoire client** — historique des appels passés injecté dans le prompt email
-- **Reporting hebdomadaire** — synthèse agent + manager chaque lundi matin
+- **Email de suivi automatique** : brouillon Gmail généré par Claude après chaque appel, personnalisé selon l'historique client
+- **Coaching en temps réel** : score /10, points forts, axes d'amélioration, tonalité et engagements pris envoyés sur Slack
+- **Alerte manager** : notification immédiate sur channel dédié si score < 4
+- **Bibliothèque d'objections** : toutes les objections clients stockées dans Google Sheets
+- **Base de connaissances** : les meilleurs appels (score > 7) archivés automatiquement dans Notion
+- **Mémoire client** : historique des appels passés injecté dans le prompt email
+- **Reporting hebdomadaire** : synthèse agent + manager chaque lundi matin
 
 ---
 
@@ -55,16 +55,16 @@ Transcript (simulé ou Fireflies/Whisper)
      Mémoire client (Google Sheets)
               |
               v
-     Claude API — Email follow-up
+     Claude API - Email follow-up
               |
               v
-       Gmail — Brouillon
+       Gmail - Brouillon
               |
               v
-     Claude API — Analyse coaching
+     Claude API - Analyse coaching
               |
               v
-  Google Sheets — Objections + Historique
+  Google Sheets - Objections + Historique
               |
          [IF score < 4]
          /            \
@@ -146,9 +146,9 @@ Trois scénarios sont documentés pour valider le workflow de bout en bout :
 
 | Cas | Score attendu | Résultat |
 |---|---|---|
-| Appel faible — agent incapable de répondre | < 4 | Alerte `#alertes-manager` |
-| Appel moyen — suivi insuffisant | 5–6 | Coaching `#coaching-calls` + Sheets |
-| Bon appel — écoute active + engagement clair | > 7 | Coaching + Sheets + Notion |
+| Appel faible - agent incapable de répondre | < 4 | Alerte `#alertes-manager` |
+| Appel moyen - suivi insuffisant | 5–6 | Coaching `#coaching-calls` + Sheets |
+| Bon appel - écoute active + engagement clair | > 7 | Coaching + Sheets + Notion |
 
 ---
 
