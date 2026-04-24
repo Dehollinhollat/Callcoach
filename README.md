@@ -74,7 +74,7 @@ Transcript (simulé ou Fireflies/Whisper)
                          |
                        Notion
 ```
-
+![Pipeline_n8n](assets/pipeline_n8n.png)
 ---
 
 ## Structure du repo
@@ -116,12 +116,19 @@ callcoach/
 
 ### Coaching Slack
 ![Coaching Slack](assets/coaching_slack.png)
-
+---
 ### Alerte Manager
 ![Alerte Manager](assets/alerte_manager.png)
-
+---
 ### Base de connaissances Notion
 ![Notion](assets/notion_base_connaissances.png)
+---
+### Google Sheets — Objections
+![Sheets Objections](assets/sheets_objections.png)
+---
+### Google Sheets — Historique
+![Sheets Historique](assets/sheets_historique.png)
+---
 
 ### Installation
 
