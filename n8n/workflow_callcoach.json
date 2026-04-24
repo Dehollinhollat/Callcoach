@@ -1,1 +1,781 @@
-
+{
+  "name": "Callcoach",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        0
+      ],
+      "id": "aed604fa-6cca-4109-bc7b-b76a0d39b815",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.content[0].text;\nconst cleaned = raw.replace(/```json|```/g, '').trim();\nconst coaching = JSON.parse(cleaned);\n\ncoaching.agent = $('Transcription appel').first().json.Agent;\ncoaching.client = $('Transcription appel').first().json.Client;\n\ncoaching.objections = coaching.objections && coaching.objections.length > 0 \n  ? coaching.objections.join(', ') \n  : 'Aucune objection détectée';\n\ncoaching.engagements = coaching.engagements && coaching.engagements.length > 0 \n  ? coaching.engagements.join(', ') \n  : 'Aucun engagement pris';\n\ncoaching.points_forts = coaching.points_forts && coaching.points_forts.length > 0 \n  ? coaching.points_forts \n  : ['Aucun point fort détecté'];\n\ncoaching.axes_amelioration = coaching.axes_amelioration && coaching.axes_amelioration.length > 0 \n  ? coaching.axes_amelioration \n  : ['Aucun axe détecté'];\n\ncoaching.call_id = `${coaching.agent}_${coaching.client}_${new Date().toISOString().split('T')[0]}`;\nreturn [{ json: coaching }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        0
+      ],
+      "id": "94105ab1-0730-42cf-bfa7-642f09098ddb",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b5827837-90d8-44bc-824a-0b06993b693a",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 4,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1408,
+        0
+      ],
+      "id": "24b24365-dcd2-4650-889c-a6097445faae",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#alertes-manager",
+          "mode": "name"
+        },
+        "text": "=⚠️ *ALERTE - Appel à risque détecté* Agent : *{{ $json.agent }}* - Client : *{{ $json.client }}* \n\n\n🎯 *Score :* {{ $json.score }}/10 \n\n\n📝 *Résumé de l'échange :*\n{{ $('Transcription appel').item.json.transcript }}\n\n\n🎙️ *Tonalité :* {{ $json.tonalite }}; {{ $('Code in JavaScript').item.json.type_appel }}  \n\n\n⚡ *Action requise :* revue manager recommandée.\n\n\n📈 *Axes d'amélioration :*\n• {{ $('Code in JavaScript').item.json.axes_amelioration.join('\\n• ') }}\n",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        1760,
+        -176
+      ],
+      "id": "179280b8-fd0b-4da9-b2d2-c2ec0f320485",
+      "name": "Alertes Manager",
+      "webhookId": "2710ff51-6238-4eb9-b08a-c1a7a8c05554",
+      "credentials": {
+        "slackApi": {
+          "id": "TON_TOKEN_SLACK",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "#coaching-calls"
+        },
+        "text": "=📞 *Analyse de l'appel* — {{ $('Code in JavaScript').item.json.agent }} avec {{ $('Code in JavaScript').item.json.client }}\n\n\n🎯 *Score :* *{{ $('Code in JavaScript').item.json.score }}/10*\n\n\n✅ *Points forts :*\n• {{ $('Code in JavaScript').item.json.points_forts.join('\\n• ') }}\n\n\n📈 *Axes d'amélioration :*\n• {{ $('Code in JavaScript').item.json.axes_amelioration.join('\\n• ') }}\n\n🎙️ *Tonalité :* {{ $('Code in JavaScript').item.json.tonalite }}; {{ $('Code in JavaScript').item.json.type_appel }}\n\n\n🤝 *Engagements pris :*\n• {{ $('Code in JavaScript').item.json.engagements }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        1760,
+        128
+      ],
+      "id": "5a44e139-43cd-4f23-8327-b8f0daea60b6",
+      "name": "Message Coach",
+      "webhookId": "675289e2-6a64-4f26-8e7b-10b2f13f8624",
+      "credentials": {
+        "slackApi": {
+          "id": "TON_TOKEN_SLACK",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "446ae6b8-510e-4a43-888e-861ed3ccb72d",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 7,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2016,
+        0
+      ],
+      "id": "7f752811-5a2d-4b6f-a08a-8fe20feb517f",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "34b5314a-f7ce-80ef-8fe4-f31286903b3e",
+          "mode": "list",
+          "cachedResultName": "CallCoach — Base de connaissances",
+          "cachedResultUrl": "https://www.notion.so/34b5314af7ce80ef8fe4f31286903b3e"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Titre|title",
+              "title": "=Appel {{ $('Code in JavaScript').item.json.type_appel }} — {{ $('Code in JavaScript').item.json.client }}"
+            },
+            {
+              "key": "Date|date",
+              "includeTime": false,
+              "date": "={{ new Date().toISOString().split('T')[0] }}"
+            },
+            {
+              "key": "Agent|rich_text",
+              "textContent": "={{ $('Code in JavaScript').item.json.agent }}"
+            },
+            {
+              "key": "type appel|select",
+              "selectValue": "={{ $('Code in JavaScript').item.json.type_appel }}"
+            },
+            {
+              "key": "Score|number",
+              "numberValue": "={{ $('Code in JavaScript').item.json.score }}"
+            },
+            {
+              "key": "Résumé|rich_text",
+              "textContent": "={{ $('Code in JavaScript').item.json.resume }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2288,
+        -208
+      ],
+      "id": "2aa09d4e-3dec-4532-a504-429a9699467a",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "TON_NOTION",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { \n  historique_client: \"Aucun appel précédent.\",\n  transcript: $('Transcription appel').item.json.transcript,\n  agent: $('Transcription appel').item.json.agent,\n  client: $('Transcription appel').item.json.client\n}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "558dc195-b712-4092-8dfe-5a8b246b1ca8",
+      "name": "Code node historique"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "16LquH7IWuf4qiduys293QM_Xqr7IN9QVOzbgyAMkH5s",
+          "mode": "list",
+          "cachedResultName": "CallCoach",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16LquH7IWuf4qiduys293QM_Xqr7IN9QVOzbgyAMkH5s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "objections",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16LquH7IWuf4qiduys293QM_Xqr7IN9QVOzbgyAMkH5s/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ new Date().toISOString().split('T')[0] }}",
+            "agent": "={{ $('Code in JavaScript').item.json.agent }}",
+            "client": "={{ $('Code in JavaScript').item.json.client }}",
+            "type_appel": "={{ $('Code in JavaScript').item.json.type_appel }}",
+            "objection": "={{ $('Code in JavaScript').item.json.objections }}",
+            "call_id": "={{ $('Code in JavaScript').item.json.call_id }}"
+          },
+          "matchingColumns": [
+            "call_id"
+          ],
+          "schema": [
+            {
+              "id": "call_id",
+              "displayName": "call_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "agent",
+              "displayName": "agent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "client",
+              "displayName": "client",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type_appel",
+              "displayName": "type_appel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "objection",
+              "displayName": "objection",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "27753bfd-3f86-4edd-accb-7afdb34db162",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_OAUTH_TOKEN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "16LquH7IWuf4qiduys293QM_Xqr7IN9QVOzbgyAMkH5s",
+          "mode": "list",
+          "cachedResultName": "CallCoach",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16LquH7IWuf4qiduys293QM_Xqr7IN9QVOzbgyAMkH5s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1971899960,
+          "mode": "list",
+          "cachedResultName": "historique",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16LquH7IWuf4qiduys293QM_Xqr7IN9QVOzbgyAMkH5s/edit#gid=1971899960"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ new Date().toISOString().split('T')[0] }}",
+            "agent": "={{ $('Code in JavaScript').item.json.agent }}",
+            "client": "={{ $json.client }}",
+            "type_appel": "={{ $json.type_appel }}",
+            "score": "={{ $('Code in JavaScript').item.json.score }}",
+            "tonalite": "={{ $('Code in JavaScript').item.json.tonalite }}",
+            "resume": "={{ $('Code in JavaScript').item.json.resume }}",
+            "call_id": "={{ $('Code in JavaScript').item.json.call_id }}"
+          },
+          "matchingColumns": [
+            "call_id"
+          ],
+          "schema": [
+            {
+              "id": "call_id",
+              "displayName": "call_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "agent",
+              "displayName": "agent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "client",
+              "displayName": "client",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type_appel",
+              "displayName": "type_appel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tonalite",
+              "displayName": "tonalite",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resume",
+              "displayName": "resume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1216,
+        0
+      ],
+      "id": "321157a9-1217-4410-ba67-71c0c95f388e",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_OAUTH_TOKEN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4579c81d-b598-4541-891b-66e495cd3ccb",
+              "name": "email_body",
+              "value": "={{ $json.content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        0
+      ],
+      "id": "d6dcb3ef-0e88-4ad2-9649-634904d27cb6",
+      "name": "Préparation message"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "Suite à notre échange",
+        "message": "={{ $json.email_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        0
+      ],
+      "id": "8bc58b27-d6b6-4f0c-b360-ed079886a2d3",
+      "name": "Brouillon à envoyer",
+      "webhookId": "4513d02f-5ec6-4cf8-bf85-0f2986a4d0cf",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0RQVlQYatmyOYjdD",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0daa4d7-57a6-44fc-ac8d-667f58c356a5",
+              "name": "transcript",
+              "value": "Agent: Allô ? Client: Bonjour, je voudrais des informations sur vos offres. Agent: Je sais pas trop, faudrait appeler un collègue. Client: Donc vous pouvez pas m'aider ? Agent: Non pas vraiment. Bonne journée. Client: C'est... ok.",
+              "type": "string"
+            },
+            {
+              "id": "d11fc19a-69c8-4cd8-8f11-a1cb8c53a527",
+              "name": "Agent",
+              "value": "=Agent call center",
+              "type": "string"
+            },
+            {
+              "id": "75bf92a2-9870-4938-830d-41c38e3d0b27",
+              "name": "Client",
+              "value": "=Alex",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -384,
+        0
+      ],
+      "id": "78121625-1c1a-4acf-90f5-b10a0e01dddc",
+      "name": "Transcription appel"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "TON_API_KEY_ANTHROPIC"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-haiku-4-5\",\n  \"max_tokens\": 1024,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Tu es un assistant commercial. À partir de ce transcript et de l'historique client, rédige un email de follow-up professionnel, court, personnalisé, avec un next step clair. Si l'historique mentionne des échanges précédents, fais-y référence naturellement.\\n\\nHistorique client :\\n{{ $('Code node historique').item.json.historique_client }}\\n\\nTranscript :\\n{{ $('Transcription appel').item.json.transcript }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        32,
+        0
+      ],
+      "id": "c045b375-b143-4b4d-a12b-d3d3d79348e7",
+      "name": "IA analyse appel"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "TON_API_KEY_ANTHROPIC"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-haiku-4-5\",\n  \"max_tokens\": 1024,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Tu es un coach commercial expert. Analyse ce transcript d'appel et retourne UNIQUEMENT un JSON valide avec cette structure exacte :\\n{\\n  \\\"score\\\": 7,\\n  \\\"points_forts\\\": [\\\"point 1\\\", \\\"point 2\\\"],\\n  \\\"axes_amelioration\\\": [\\\"axe 1\\\", \\\"axe 2\\\"],\\n  \\\"tonalite\\\": \\\"fluide\\\",\\n  \\\"type_appel\\\": \\\"prospection\\\",\\n  \\\"engagements\\\": [\\\"envoyer proposition jeudi\\\"],\\n  \\\"objections\\\": [\\\"c'est trop cher\\\", \\\"pas le bon moment\\\"],\\n  \\\"resume\\\": \\\"Résumé court de l'échange en 2 phrases.\\\"\\n}\\n\\nPour type_appel : prospection, support, relance, closing.\\nPour objections : liste uniquement les objections exprimées par le client.\\nSi aucune objection, retourne un tableau vide.\\n\\nTranscript :\\n{{ $('Transcription appel').item.json.transcript }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        672,
+        0
+      ],
+      "id": "74f90ed5-f56b-4960-bcf1-7900ced6ef6a",
+      "name": "Analyse IA Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Transcription appel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Alertes Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message Coach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alertes Manager": {
+      "main": [
+        [
+          {
+            "node": "Message Coach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Coach": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code node historique": {
+      "main": [
+        [
+          {
+            "node": "IA analyse appel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparation message": {
+      "main": [
+        [
+          {
+            "node": "Brouillon à envoyer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brouillon à envoyer": {
+      "main": [
+        [
+          {
+            "node": "Analyse IA Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcription appel": {
+      "main": [
+        [
+          {
+            "node": "Code node historique",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA analyse appel": {
+      "main": [
+        [
+          {
+            "node": "Préparation message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse IA Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ee6cf153-f3b8-461f-9345-68eb1b425fc0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9c8d7fac769f8020e2b93ba5891ebd5840fa0ad16f0335465d2d7823e8b8ba71"
+  },
+  "id": "GtOQ0CKywMuAAiVy",
+  "tags": []
+}
